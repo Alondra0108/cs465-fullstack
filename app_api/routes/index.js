@@ -3,16 +3,16 @@ const router = express.Router();
 
 const tripsController = require('../controllers/trips');
 
-// GET /api/trips
-// Send requests for all trips to the tripsList controller.
+// GET all trips and POST a new trip.
 router
-    .route('/trips')
-    .get(tripsController.tripsList);
+  .route('/trips')
+  .get(tripsController.tripsList)
+  .post(tripsController.tripsAddTrip);
 
-// GET /api/trips/:tripCode
-// Send requests containing a trip code to tripsFindByCode.
+// GET one trip by code and update one trip by code.
 router
-    .route('/trips/:tripCode')
-    .get(tripsController.tripsFindByCode);
+  .route('/trips/:tripCode')
+  .get(tripsController.tripsFindByCode)
+  .put(tripsController.tripsUpdateTrip);
 
 module.exports = router;
