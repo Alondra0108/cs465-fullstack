@@ -124,9 +124,36 @@ const tripsUpdateTrip = async (req, res) => {
   }
 };
 
+// DELETE: /api/trips/:tripCode
+// Deletes the trip matching the supplied code.
+const tripsDeleteTrip = async (req, res) => {
+  try {
+    const trip = await Trip
+      .findOneAndDelete({ code: req.params.tripCode })
+      .exec();
+
+    if (!trip) {
+      return res
+        .status(404)
+        .json({
+          message: `No trip found with code ${req.params.tripCode}`
+        });
+    }
+
+    return res
+      .status(200)
+      .json(trip);
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: err.message });
+  }
+};
+
 module.exports = {
   tripsList,
   tripsFindByCode,
   tripsAddTrip,
-  tripsUpdateTrip
+  tripsUpdateTrip,
+  tripsDeleteTrip
 };

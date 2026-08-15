@@ -35,4 +35,10 @@ export class TripData {
       formData
     );
   }
+
+  deleteTrip(tripCode: string): Observable<Trip> {
+    return this.http.delete<Trip>(
+      `${this.apiUrl}/${tripCode}`
+    );
+  }
 }

@@ -19,13 +19,21 @@
 
     <div class="card-text" [innerHTML]="trip.description"></div>
 
-    <div class="mt-3">
+    <div *ngIf="auth.isLoggedIn()" class="mt-3">
       <button
         type="button"
         (click)="editTrip(trip)"
         class="btn btn-info"
       >
         Edit Trip
+      </button>
+
+      <button
+        type="button"
+        (click)="deleteTrip(trip)"
+        class="btn btn-danger ms-2"
+      >
+        Delete Trip
       </button>
     </div>
   </div>

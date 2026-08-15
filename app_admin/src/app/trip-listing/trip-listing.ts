@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Trip } from '../models/trip';
 import { TripData } from '../services/trip-data';
 import { TripCard } from '../trip-card/trip-card';
+import { AuthenticationService } from '../services/authentication';
 
 @Component({
   selector: 'app-trip-listing',
@@ -22,12 +23,25 @@ export class TripListing implements OnInit {
 
   constructor(
     private readonly tripDataService: TripData,
+    public readonly auth: AuthenticationService,
     private readonly router: Router,
     private readonly changeDetector: ChangeDetectorRef
   ) {}
 
   public addTrip(): void {
     this.router.navigate(['/add-trip']);
+  }
+
+  public removeDeletedTrip(tripCode: string): void {
+    this.trips = this.trips.filter(
+      (trip: Trip) => trip.code !== tripCode
+    );
+
+    this.message = this.trips.length > 0
+      ? `There are ${this.trips.length} trips available.`
+      : 'There are no trips available.';
+
+    this.changeDetector.detectChanges();
   }
 
   private getTrips(): void {

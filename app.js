@@ -4,9 +4,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var hbs = require('hbs');
+var passport = require('passport');
+
+require('dotenv').config();
 
 // Connect to the database through the API models folder.
 require('./app_api/models/db');
+require('./app_api/config/passport');
 
 var indexRouter = require('./app_server/routes/index');
 var usersRouter = require('./app_server/routes/users');
@@ -26,6 +30,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Enable CORS for requests from the Angular admin application.
@@ -36,7 +41,7 @@ app.use('/api', (req, res, next) => {
   );
   res.header(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
   res.header(
     'Access-Control-Allow-Methods',
@@ -55,6 +60,14 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/travel', travelRouter);
 app.use('/api', apiRouter);
+
+// Return JSON for authentication failures from protected API routes.
+app.use('/api', function(err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).json({ message: 'Unauthorized: invalid or missing token.' });
+  }
+  next(err);
+});
 
 // Catch 404 and forward to the error handler.
 app.use(function(req, res, next) {

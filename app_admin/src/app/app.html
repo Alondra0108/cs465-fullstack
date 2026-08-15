@@ -1,6 +1,29 @@
 <nav class="navbar navbar-light bg-light mb-4">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">{{ title() }}</a>
+    <a class="navbar-brand" routerLink="/">{{ title() }}</a>
+
+    <div class="d-flex align-items-center gap-2">
+      <span *ngIf="auth.isLoggedIn()" class="navbar-text">
+        Welcome, {{ auth.getCurrentUser()?.name }}
+      </span>
+
+      <a
+        *ngIf="!auth.isLoggedIn() && !isLoginPage()"
+        class="btn btn-outline-primary"
+        routerLink="/login"
+      >
+        Login
+      </a>
+
+      <button
+        *ngIf="auth.isLoggedIn()"
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="logout()"
+      >
+        Logout
+      </button>
+    </div>
   </div>
 </nav>
 

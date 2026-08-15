@@ -1,4 +1,4 @@
-<div class="mb-3">
+<div *ngIf="auth.isLoggedIn()" class="mb-3">
   <button type="button" (click)="addTrip()" class="btn btn-info">
     Add Trip
   </button>
@@ -6,6 +6,9 @@
 
 <div class="row">
   <div *ngFor="let trip of trips" class="col-12 col-md-4 mb-4">
-    <app-trip-card [trip]="trip"></app-trip-card>
+    <app-trip-card
+      [trip]="trip"
+      (tripDeleted)="removeDeletedTrip($event)"
+    ></app-trip-card>
   </div>
 </div>
