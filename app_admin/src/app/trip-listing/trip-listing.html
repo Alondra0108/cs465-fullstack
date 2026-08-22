@@ -4,6 +4,8 @@
   </button>
 </div>
 
+<p *ngIf="message" class="text-muted" role="status">{{ message }}</p>
+
 <div class="row">
   <div *ngFor="let trip of trips" class="col-12 col-md-4 mb-4">
     <app-trip-card

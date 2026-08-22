@@ -7,12 +7,6 @@ const tripsList = async (req, res) => {
   try {
     const trips = await Trip.find({}).exec();
 
-    if (!trips || trips.length === 0) {
-      return res
-        .status(404)
-        .json({ message: 'No trips found' });
-    }
-
     return res
       .status(200)
       .json(trips);
@@ -90,7 +84,8 @@ const tripsUpdateTrip = async (req, res) => {
       .findOneAndUpdate(
         { code: req.params.tripCode },
         {
-          code: req.body.code,
+          // The route code is the stable identifier for the trip.
+          code: req.params.tripCode,
           name: req.body.name,
           length: req.body.length,
           start: req.body.start,
@@ -100,7 +95,7 @@ const tripsUpdateTrip = async (req, res) => {
           description: req.body.description
         },
         {
-          new: true,
+          returnDocument: 'after',
           runValidators: true
         }
       )
@@ -108,14 +103,14 @@ const tripsUpdateTrip = async (req, res) => {
 
     if (!trip) {
       return res
-        .status(400)
+        .status(404)
         .json({
           message: `No trip found with code ${req.params.tripCode}`
         });
     }
 
     return res
-      .status(201)
+      .status(200)
       .json(trip);
   } catch (err) {
     return res
